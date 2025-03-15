@@ -109,49 +109,42 @@ export function ContactFormPanel({
       });
 
       let anyErrors = false;
-      function onError(integration: Integration, error: Error) {
-        onContactResult({
-          status: "error",
-          integration,
-          error,
-        });
-        anyErrors = true;
-      }
 
+      // Create a new contact in all connected integrations
       await Promise.all(
-        connectedIntegrations.map((integration) => {
-          // Invoke the "create-contact" action to create a new contact in all connected integrations
-          return integrationApp
-            .connection(integration.connection!.id)
-            .action("create-contact")
-            .run(contactData)
-            .then((result) => {
-              // Read new contact details to be able to link to it
-              return integrationApp
-                .connection(integration.connection!.id)
-                .action("find-contact-by-id")
-                .run({ id: result.output.id })
-                .then((contactResult) => {
-                  onContactResult({
-                    status: "success",
-                    integration,
-                    contact: {
-                      id: result.output.id,
-                      uri: contactResult.output.uri,
-                    },
-                  });
-                })
-                .catch((error) => {
-                  onError(integration, error);
-                });
-            })
-            .catch((error) => {
-              onError(integration, error);
+        connectedIntegrations.map(async (integration) => {
+          try {
+            // Invoke the "create-contact" action to create a new contact in this integration
+            const createResult = await integrationApp
+              .connection(integration.connection!.id)
+              .action("create-contact")
+              .run(contactData);
+
+            // Read new contact details to be able to link to it
+            const contactResult = await integrationApp
+              .connection(integration.connection!.id)
+              .action("find-contact-by-id")
+              .run({ id: createResult.output.id });
+
+            onContactResult({
+              status: "success",
+              integration,
+              contact: {
+                id: createResult.output.id,
+                uri: contactResult.output.uri,
+              },
             });
+          } catch (error) {
+            onContactResult({
+              status: "error",
+              integration,
+              error: error as Error,
+            });
+            anyErrors = true;
+          }
         }),
       );
 
-      // TODO: add back after testing
       if (!anyErrors) {
         form.reset();
       }
