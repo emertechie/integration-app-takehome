@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Integration, useIntegrationApp } from "@integration-app/react";
+import { ContactResult } from "../types/contact-result";
 
 const contactFormSchema = z.object({
   fullName: z.string().min(2, {
@@ -36,28 +37,6 @@ const contactFormSchema = z.object({
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
-
-type PendingResult = {
-  status: "pending";
-  integration: Integration;
-};
-
-type SuccessResult = {
-  status: "success";
-  integration: Integration;
-  contact: {
-    id: string;
-    uri: string;
-  };
-};
-
-type ErrorResult = {
-  status: "error";
-  integration: Integration;
-  error: Error;
-};
-
-export type ContactResult = PendingResult | SuccessResult | ErrorResult;
 
 interface ContactFormPanelProps {
   integrations: Integration[];
