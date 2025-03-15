@@ -1,10 +1,13 @@
 import jwt from "jsonwebtoken";
 
-// Your workspace key and secret.
-// You can find them on the Settings page.
-const WORKSPACE_KEY = "7923c287-7f37-4a91-b616-4e67f02a1f0c";
-const WORKSPACE_SECRET =
-  "f6054716505374e2d25a5f0783854af1c1c410cb2c265bc9c48135c4a4c1291e";
+if (!process.env.WORKSPACE_KEY || !process.env.WORKSPACE_SECRET) {
+  throw new Error(
+    "WORKSPACE_KEY and WORKSPACE_SECRET must be set in environment variables",
+  );
+}
+
+const WORKSPACE_KEY = process.env.WORKSPACE_KEY;
+const WORKSPACE_SECRET = process.env.WORKSPACE_SECRET;
 
 interface TokenData {
   /**
