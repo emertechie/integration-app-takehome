@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Panel } from "./panel";
-import { Integration, useIntegrationApp } from "@integration-app/react";
+import {
+  Integration,
+  useIntegrationApp,
+  useIntegrations,
+} from "@integration-app/react";
 import Image from "next/image";
 
 interface IntegrationsPanelProps {
@@ -15,6 +19,7 @@ export function IntegrationsPanel({
   error,
 }: IntegrationsPanelProps) {
   const integrationApp = useIntegrationApp();
+  const { refresh } = useIntegrations();
 
   return (
     <Panel title="Intergrations" subtitle="Where new contacts will be created">
@@ -41,17 +46,15 @@ export function IntegrationsPanel({
             variant={integration.connection ? "destructive" : "default"}
             onClick={async () => {
               if (integration.connection) {
-                console.log("disconnecting", integration.connection.id);
                 await integrationApp
                   .connection(integration.connection.id)
                   .archive();
-                console.log("disconnected", integration.connection.id);
+                await refresh();
               } else {
-                console.log("connecting", integration.key);
-                const connection = await integrationApp
+                await integrationApp
                   .integration(integration.key)
                   .openNewConnection();
-                console.log("connected", connection);
+                await refresh();
               }
             }}
           >

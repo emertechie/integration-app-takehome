@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Integration, useIntegrationApp } from "@integration-app/react";
 import { ContactResult } from "../types/contact-result";
+import { Loader2 } from "lucide-react";
 
 const contactFormSchema = z.object({
   fullName: z.string().min(2, {
@@ -202,11 +203,7 @@ export function ContactFormPanel({
               <FormItem>
                 <FormLabel>Company Name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Acme Inc."
-                    {...field}
-                    disabled={isSubmitting}
-                  />
+                  <Input {...field} disabled={isSubmitting} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -220,11 +217,7 @@ export function ContactFormPanel({
               <FormItem>
                 <FormLabel>Pronouns</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="they/them"
-                    {...field}
-                    disabled={isSubmitting}
-                  />
+                  <Input {...field} disabled={isSubmitting} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -232,7 +225,14 @@ export function ContactFormPanel({
           />
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Creating Contact..." : "Create Contact"}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="animate-spin" />
+                Creating Contact...
+              </>
+            ) : (
+              "Create Contact"
+            )}
           </Button>
         </form>
       </Form>

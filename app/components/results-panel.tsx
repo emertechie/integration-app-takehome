@@ -18,7 +18,7 @@ export function ResultsPanel({ resultsByIntegrationId }: ResultsPanelProps) {
                 <h3 className="text-lg font-bold">{result.integration.name}</h3>
 
                 {result.status === "pending" ? (
-                  <p>Pending...</p>
+                  <p>Creating...</p>
                 ) : result.status === "success" ? (
                   <p>
                     <span className="mr-1">Success.</span>
