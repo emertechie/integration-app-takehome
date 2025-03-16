@@ -22,7 +22,7 @@ export function IntegrationsPanel({
   const { refresh } = useIntegrations();
 
   return (
-    <Panel title="Intergrations" subtitle="Where new contacts will be created">
+    <Panel title="Integrations" subtitle="Where new contacts will be created">
       {integrationsIsLoading && <div>Loading...</div>}
       {error && <div>Error: {error.message}</div>}
       {integrations.map((integration) => (

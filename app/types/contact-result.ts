@@ -1,5 +1,10 @@
 import { Integration } from "@integration-app/react";
 
+export interface PendingResult {
+  status: "pending";
+  integration: Integration;
+}
+
 export interface SuccessResult {
   status: "success";
   integration: Integration;
@@ -7,11 +12,6 @@ export interface SuccessResult {
     id: string;
     uri: string;
   };
-}
-
-export interface PendingResult {
-  status: "pending";
-  integration: Integration;
 }
 
 export interface ErrorResult {
