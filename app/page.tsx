@@ -18,8 +18,6 @@ export default function Page() {
   >({});
 
   function handleContactResult(result: ContactResult) {
-    console.log("handleContactResult", result);
-
     setResultsByIntegrationId((prev) => ({
       ...prev,
       [result.integration.id]: result,
