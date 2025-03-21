@@ -35,6 +35,7 @@ const contactFormSchema = z.object({
     message: "Company name is required.",
   }),
   pronouns: z.string().optional(),
+  pronounsTwo: z.string().optional(),
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
@@ -59,6 +60,7 @@ export function ContactFormPanel({
       phone: "",
       company: "",
       pronouns: "",
+      pronounsTwo: "",
     },
   });
 
@@ -78,13 +80,10 @@ export function ContactFormPanel({
         primaryPhone: data.phone,
         companyName: data.company,
         pronouns: data.pronouns,
+        pronounsTwo: data.pronounsTwo,
       };
 
-      const connectedIntegrations = integrations.filter(
-        (integration) => integration.connection,
-      );
-
-      connectedIntegrations.forEach((integration) => {
+      integrations.forEach((integration) => {
         onContactResult({ status: "pending", integration });
       });
 
@@ -92,12 +91,18 @@ export function ContactFormPanel({
 
       // Create a new contact in all connected integrations
       await Promise.all(
-        connectedIntegrations.map(async (integration) => {
+        integrations.map(async (integration) => {
           try {
+            console.log(
+              "Creating contact. Conn ID:",
+              integration.connection!.id,
+              "Data:",
+              contactData,
+            );
             // Invoke the "create-contact" action to create a new contact in this integration
             const createResult = await integrationApp
               .connection(integration.connection!.id)
-              .action("create-contact")
+              .action("create-contact-2")
               .run(contactData);
 
             // Read new contact details to be able to link to it
@@ -216,6 +221,20 @@ export function ContactFormPanel({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Pronouns</FormLabel>
+                <FormControl>
+                  <Input {...field} disabled={isSubmitting} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="pronounsTwo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Pronouns (Two)</FormLabel>
                 <FormControl>
                   <Input {...field} disabled={isSubmitting} />
                 </FormControl>

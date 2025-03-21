@@ -14,6 +14,10 @@ export default function Page() {
     error,
   } = useIntegrations();
 
+  const connectedIntegrations = integrations.filter(
+    (integration) => integration.connection,
+  );
+
   const [resultsByIntegrationId, setResultsByIntegrationId] = useState<
     Record<string, ContactResult>
   >({});
@@ -35,13 +39,13 @@ export default function Page() {
       />
 
       {!integrationsIsLoading && !error && (
-        <TestPanel integrations={integrations} />
+        <TestPanel integrations={connectedIntegrations} />
       )}
 
       {/* Contact Form Panel */}
       {!integrationsIsLoading && !error && (
         <ContactFormPanel
-          integrations={integrations}
+          integrations={connectedIntegrations}
           onContactResult={handleContactResult}
         />
       )}
