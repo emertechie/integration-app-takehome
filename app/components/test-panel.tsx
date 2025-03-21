@@ -9,12 +9,18 @@ export function TestPanel({ integrations }: { integrations: Integration[] }) {
   const sortedIntegrations = sortBy(integrations, (i) => !i.connection);
 
   async function handleClick(integration: Integration) {
-    console.log(integration);
+    console.log("Integration", integration);
 
-    // await integrationApp
-    //   .connection("{INTEGRATION_KEY}")
-    //   .fieldMapping("{FIELD_MAPPING_KEY}")
-    //   .openConfiguration();
+    const result = await integrationApp
+      .connection(integration.connection!.id)
+      .fieldMapping("extended-contact-mapping")
+      .get();
+    console.log("Field Mapping", result);
+
+    await integrationApp
+      .connection(integration.connection!.id)
+      .fieldMapping("extended-contact-mapping")
+      .openConfiguration();
   }
 
   return (
@@ -25,7 +31,13 @@ export function TestPanel({ integrations }: { integrations: Integration[] }) {
             className="flex items-center justify-between gap-2 rounded-lg border p-4"
             key={integration.id}
           >
-            {integration.name} (key: {integration.key}, id: {integration.id})
+            <div className="flex flex-col gap-1">
+              <p>{integration.name}</p>
+              <p className="text-muted-foreground text-sm">
+                key: {integration.key}, id: {integration.id}
+              </p>
+            </div>
+
             <Button
               variant="secondary"
               onClick={() => handleClick(integration)}
