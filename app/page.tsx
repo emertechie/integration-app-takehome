@@ -5,6 +5,7 @@ import { useIntegrations } from "@integration-app/react";
 import { useState } from "react";
 import { ResultsPanel } from "./components/results-panel";
 import { ContactResult } from "./types/contact-result";
+import { TestPanel } from "./components/test-panel";
 
 export default function Page() {
   const {
@@ -32,6 +33,10 @@ export default function Page() {
         loading={integrationsIsLoading}
         error={error}
       />
+
+      {!integrationsIsLoading && !error && (
+        <TestPanel integrations={integrations} />
+      )}
 
       {/* Contact Form Panel */}
       {!integrationsIsLoading && !error && (
